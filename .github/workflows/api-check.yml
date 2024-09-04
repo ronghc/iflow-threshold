@@ -29,7 +29,7 @@ jobs:
         echo "API response: $RESPONSE"
 
         # 提取 "365_beaten" 的值
-        BEATEN_VALUE=$(echo "$RESPONSE" | jq '.365_beaten')
+        BEATEN_VALUE=$(echo "$RESPONSE" | jq '.["365_beaten"]')
 
         # 输出提取的值（用于调试）
         echo "365_beaten value: $BEATEN_VALUE"
