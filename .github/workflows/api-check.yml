@@ -1,0 +1,57 @@
+name: API Data Check
+
+on:
+  schedule:
+    # 定时触发，比如每天 UTC 时间的早上 6 点
+    - cron: '0 6 * * *'
+
+  # 你也可以手动触发这个工作流
+  workflow_dispatch:
+
+jobs:
+  check-api:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Query API
+      id: query_api
+      run: |
+        # API URL
+        API_URL="https://api.iflow.work/steam/analysisTakeaway"
+
+        # 使用 curl 查询 API
+        RESPONSE=$(curl -s "$API_URL")
+
+        # 输出 API 响应（用于调试）
+        echo "API response: $RESPONSE"
+
+        # 提取 "365_beaten" 的值
+        BEATEN_VALUE=$(echo "$RESPONSE" | jq '.365_beaten')
+
+        # 输出提取的值（用于调试）
+        echo "365_beaten value: $BEATEN_VALUE"
+
+        # 检查 "365_beaten" 是否大于 0.9
+        if (( $(echo "$BEATEN_VALUE > 0.9" | bc -l) )); then
+          echo "Condition met: 365_beaten > 0.9"
+          echo "true" > condition.txt
+        else
+          echo "Condition not met: 365_beaten <= 0.9"
+          echo "false" > condition.txt
+        fi
+
+    - name: Send Email if Condition Met
+      if: always() && steps.query_api.outputs.condition == 'true'
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.example.com
+        server_port: 587
+        username: ${{ secrets.SMTP_USERNAME }}
+        password: ${{ secrets.SMTP_PASSWORD }}
+        subject: "API Data Condition Met"
+        body: "The value of 365_beaten is greater than 0.9."
+        to: 1736086952@qq.com
+        from: 1736086952@qq.com
