@@ -47,8 +47,8 @@ jobs:
       if: always() && steps.query_api.outputs.condition == 'true'
       uses: dawidd6/action-send-mail@v3
       with:
-        server_address: smtp.example.com
-        server_port: 587
+        server_address: smtp.qq.com
+        server_port: 465
         username: ${{ secrets.SMTP_USERNAME }}
         password: ${{ secrets.SMTP_PASSWORD }}
         subject: "API Data Condition Met"
