@@ -34,12 +34,12 @@ jobs:
         # 输出提取的值（用于调试）
         echo "365_beaten value: $BEATEN_VALUE"
 
-        # 检查 "365_beaten" 是否大于 0.3
-        if (( $(echo "$BEATEN_VALUE > 0.3" | bc -l) )); then
-          echo "Condition met: 365_beaten > 0.3"
+        # 检查 "365_beaten" 是否大于 0.9
+        if (( $(echo "$BEATEN_VALUE > 0.9" | bc -l) )); then
+          echo "Condition met: 365_beaten > 0.9"
           echo "::set-output name=condition::true"
         else
-          echo "Condition not met: 365_beaten <= 0.3"
+          echo "Condition not met: 365_beaten <= 0.9"
           echo "::set-output name=condition::false"
         fi
 
@@ -52,6 +52,6 @@ jobs:
         username: ${{ secrets.SMTP_USERNAME }}
         password: ${{ secrets.SMTP_PASSWORD }}
         subject: "API Data Condition Met"
-        body: "The value of 365_beaten is greater than 0.3."
+        body: "The value of 365_beaten is greater than 0.9."
         to: 1736086952@qq.com
         from: 1736086952@qq.com
