@@ -5,7 +5,7 @@ on:
     # 定时触发，比如每天 UTC 时间的早上 6 点
     - cron: '0 6 * * *'
 
-  # 你也可以手动触发这个工作流
+  # 手动触发工作流
   workflow_dispatch:
 
 jobs:
@@ -37,14 +37,14 @@ jobs:
         # 检查 "365_beaten" 是否大于 0.3
         if (( $(echo "$BEATEN_VALUE > 0.3" | bc -l) )); then
           echo "Condition met: 365_beaten > 0.3"
-          echo "true" > condition.txt
+          echo "::set-output name=condition::true"
         else
           echo "Condition not met: 365_beaten <= 0.3"
-          echo "false" > condition.txt
+          echo "::set-output name=condition::false"
         fi
 
     - name: Send Email if Condition Met
-      if: always() && steps.query_api.outputs.condition == 'true'
+      if: steps.query_api.outputs.condition == 'true'
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.qq.com
