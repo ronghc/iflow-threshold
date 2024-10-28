@@ -3,7 +3,7 @@ name: API Data Check
 on:
   schedule:
     # 定时触发，比如每天 UTC 时间的早上 6 点
-    - cron: '0 6 * * *'
+    - cron: '30 0 * * *'
 
   # 手动触发工作流
   workflow_dispatch:
